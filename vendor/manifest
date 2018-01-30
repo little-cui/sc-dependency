@@ -10,6 +10,22 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/Shopify/sarama",
+			"repository": "https://github.com/Shopify/sarama",
+			"vcs": "git",
+			"revision": "9bb4a68d57ff6f623363aa172f0a8297aa289ba7",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/apache/thrift",
+			"repository": "https://github.com/apache/thrift",
+			"vcs": "git",
+			"revision": "3d556248a8b97310da49939195330691dfe9d9ad",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/astaxie/beego",
 			"repository": "https://github.com/astaxie/beego",
 			"vcs": "git",
@@ -178,6 +194,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/go-logfmt/logfmt",
+			"repository": "https://github.com/go-logfmt/logfmt",
+			"vcs": "git",
+			"revision": "390ab7935ee28ec6b286364bba9b4dd6410cb3d5",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/gogo/protobuf",
 			"repository": "https://github.com/gogo/protobuf",
 			"vcs": "git",
@@ -294,6 +318,14 @@
 			"repository": "https://github.com/onsi/gomega",
 			"vcs": "git",
 			"revision": "00acfa9d92a386415bd235ab069c52063f925998",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/opentracing-contrib/go-observer",
+			"repository": "https://github.com/opentracing-contrib/go-observer",
+			"vcs": "git",
+			"revision": "a52f2342449246d5bcc273e65cbdcfa5f7d6c63c",
 			"branch": "HEAD",
 			"notests": true
 		},
