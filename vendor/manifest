@@ -162,10 +162,42 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/davecgh/go-spew",
+			"repository": "https://github.com/davecgh/go-spew",
+			"vcs": "git",
+			"revision": "6cf5744a041a0022271cefed95ba843f6d87fd51",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/dustin/go-humanize",
 			"repository": "https://github.com/dustin/go-humanize",
 			"vcs": "git",
 			"revision": "259d2a102b871d17f30e3cd9881a642961a1e486",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/eapache/go-resiliency",
+			"repository": "https://github.com/eapache/go-resiliency",
+			"vcs": "git",
+			"revision": "6800482f2c813e689c88b7ed3282262385011890",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/eapache/go-xerial-snappy",
+			"repository": "https://github.com/eapache/go-xerial-snappy",
+			"vcs": "git",
+			"revision": "bb955e01b9346ac19dc29eb16586c90ded99a98c",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/eapache/queue",
+			"repository": "https://github.com/eapache/queue",
+			"vcs": "git",
+			"revision": "ded5959c0d4e360646dc9e9908cff48666781367",
 			"branch": "HEAD",
 			"notests": true
 		},
@@ -262,6 +294,14 @@
 			"repository": "https://github.com/karlseguin/ccache",
 			"vcs": "git",
 			"revision": "3ba9789cfd2cb7b4fb4657efc994cc1c599a648c",
+			"branch": "HEAD",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/klauspost/crc32",
+			"repository": "https://github.com/klauspost/crc32",
+			"vcs": "git",
+			"revision": "cb6bfca970f6908083f26f39a79009d608efd5cd",
 			"branch": "HEAD",
 			"notests": true
 		},
