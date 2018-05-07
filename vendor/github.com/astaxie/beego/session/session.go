@@ -81,7 +81,6 @@ func Register(name string, provide Provider) {
 	provides[name] = provide
 }
 
-// ManagerConfig define the session config
 type ManagerConfig struct {
 	CookieName              string `json:"cookieName"`
 	EnableSetCookie         bool   `json:"enableSetCookie,omitempty"`
@@ -93,9 +92,9 @@ type ManagerConfig struct {
 	ProviderConfig          string `json:"providerConfig"`
 	Domain                  string `json:"domain"`
 	SessionIDLength         int64  `json:"sessionIDLength"`
-	EnableSidInHTTPHeader   bool   `json:"EnableSidInHTTPHeader"`
-	SessionNameInHTTPHeader string `json:"SessionNameInHTTPHeader"`
-	EnableSidInURLQuery     bool   `json:"EnableSidInURLQuery"`
+	EnableSidInHttpHeader   bool   `json:"enableSidInHttpHeader"`
+	SessionNameInHttpHeader string `json:"sessionNameInHttpHeader"`
+	EnableSidInUrlQuery     bool   `json:"enableSidInUrlQuery"`
 }
 
 // Manager contains Provider and its configuration.
@@ -126,14 +125,14 @@ func NewManager(provideName string, cf *ManagerConfig) (*Manager, error) {
 		cf.Maxlifetime = cf.Gclifetime
 	}
 
-	if cf.EnableSidInHTTPHeader {
-		if cf.SessionNameInHTTPHeader == "" {
-			panic(errors.New("SessionNameInHTTPHeader is empty"))
+	if cf.EnableSidInHttpHeader {
+		if cf.SessionNameInHttpHeader == "" {
+			panic(errors.New("SessionNameInHttpHeader is empty"))
 		}
 
-		strMimeHeader := textproto.CanonicalMIMEHeaderKey(cf.SessionNameInHTTPHeader)
-		if cf.SessionNameInHTTPHeader != strMimeHeader {
-			strErrMsg := "SessionNameInHTTPHeader (" + cf.SessionNameInHTTPHeader + ") has the wrong format, it should be like this : " + strMimeHeader
+		strMimeHeader := textproto.CanonicalMIMEHeaderKey(cf.SessionNameInHttpHeader)
+		if cf.SessionNameInHttpHeader != strMimeHeader {
+			strErrMsg := "SessionNameInHttpHeader (" + cf.SessionNameInHttpHeader + ") has the wrong format, it should be like this : " + strMimeHeader
 			panic(errors.New(strErrMsg))
 		}
 	}
@@ -164,7 +163,7 @@ func (manager *Manager) getSid(r *http.Request) (string, error) {
 	cookie, errs := r.Cookie(manager.config.CookieName)
 	if errs != nil || cookie.Value == "" {
 		var sid string
-		if manager.config.EnableSidInURLQuery {
+		if manager.config.EnableSidInUrlQuery {
 			errs := r.ParseForm()
 			if errs != nil {
 				return "", errs
@@ -174,8 +173,8 @@ func (manager *Manager) getSid(r *http.Request) (string, error) {
 		}
 
 		// if not found in Cookie / param, then read it from request headers
-		if manager.config.EnableSidInHTTPHeader && sid == "" {
-			sids, isFound := r.Header[manager.config.SessionNameInHTTPHeader]
+		if manager.config.EnableSidInHttpHeader && sid == "" {
+			sids, isFound := r.Header[manager.config.SessionNameInHttpHeader]
 			if isFound && len(sids) != 0 {
 				return sids[0], nil
 			}
@@ -227,9 +226,9 @@ func (manager *Manager) SessionStart(w http.ResponseWriter, r *http.Request) (se
 	}
 	r.AddCookie(cookie)
 
-	if manager.config.EnableSidInHTTPHeader {
-		r.Header.Set(manager.config.SessionNameInHTTPHeader, sid)
-		w.Header().Set(manager.config.SessionNameInHTTPHeader, sid)
+	if manager.config.EnableSidInHttpHeader {
+		r.Header.Set(manager.config.SessionNameInHttpHeader, sid)
+		w.Header().Set(manager.config.SessionNameInHttpHeader, sid)
 	}
 
 	return
@@ -237,9 +236,9 @@ func (manager *Manager) SessionStart(w http.ResponseWriter, r *http.Request) (se
 
 // SessionDestroy Destroy session by its id in http request cookie.
 func (manager *Manager) SessionDestroy(w http.ResponseWriter, r *http.Request) {
-	if manager.config.EnableSidInHTTPHeader {
-		r.Header.Del(manager.config.SessionNameInHTTPHeader)
-		w.Header().Del(manager.config.SessionNameInHTTPHeader)
+	if manager.config.EnableSidInHttpHeader {
+		r.Header.Del(manager.config.SessionNameInHttpHeader)
+		w.Header().Del(manager.config.SessionNameInHttpHeader)
 	}
 
 	cookie, err := r.Cookie(manager.config.CookieName)
@@ -307,9 +306,9 @@ func (manager *Manager) SessionRegenerateID(w http.ResponseWriter, r *http.Reque
 	}
 	r.AddCookie(cookie)
 
-	if manager.config.EnableSidInHTTPHeader {
-		r.Header.Set(manager.config.SessionNameInHTTPHeader, sid)
-		w.Header().Set(manager.config.SessionNameInHTTPHeader, sid)
+	if manager.config.EnableSidInHttpHeader {
+		r.Header.Set(manager.config.SessionNameInHttpHeader, sid)
+		w.Header().Set(manager.config.SessionNameInHttpHeader, sid)
 	}
 
 	return
@@ -329,7 +328,7 @@ func (manager *Manager) sessionID() (string, error) {
 	b := make([]byte, manager.config.SessionIDLength)
 	n, err := rand.Read(b)
 	if n != len(b) || err != nil {
-		return "", fmt.Errorf("Could not successfully read from the system CSPRNG")
+		return "", fmt.Errorf("Could not successfully read from the system CSPRNG.")
 	}
 	return hex.EncodeToString(b), nil
 }

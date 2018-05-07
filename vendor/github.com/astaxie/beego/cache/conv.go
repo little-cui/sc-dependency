@@ -28,7 +28,7 @@ func GetString(v interface{}) string {
 		return string(result)
 	default:
 		if v != nil {
-			return fmt.Sprint(result)
+			return fmt.Sprintf("%v", result)
 		}
 	}
 	return ""

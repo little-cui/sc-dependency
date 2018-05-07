@@ -103,7 +103,8 @@ func (d *dbBaseMysql) IndexExists(db dbQuerier, table string, name string) bool 
 // If no will insert
 // Add "`" for mysql sql building
 func (d *dbBaseMysql) InsertOrUpdate(q dbQuerier, mi *modelInfo, ind reflect.Value, a *alias, args ...string) (int64, error) {
-	var iouStr string
+
+	iouStr := ""
 	argsMap := map[string]string{}
 
 	iouStr = "ON DUPLICATE KEY UPDATE"

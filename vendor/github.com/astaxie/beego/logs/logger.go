@@ -139,11 +139,6 @@ var (
 	reset = string([]byte{27, 91, 48, 109})
 )
 
-// ColorByStatus return color by http code
-// 2xx return Green
-// 3xx return White
-// 4xx return Yellow
-// 5xx return Red
 func ColorByStatus(cond bool, code int) string {
 	switch {
 	case code >= 200 && code < 300:
@@ -157,14 +152,6 @@ func ColorByStatus(cond bool, code int) string {
 	}
 }
 
-// ColorByMethod return color by http code
-// GET return Blue
-// POST return Cyan
-// PUT return Yellow
-// DELETE return Red
-// PATCH return Green
-// HEAD return Magenta
-// OPTIONS return WHITE
 func ColorByMethod(cond bool, method string) string {
 	switch method {
 	case "GET":
@@ -186,10 +173,10 @@ func ColorByMethod(cond bool, method string) string {
 	}
 }
 
-// Guard Mutex to guarantee atomic of W32Debug(string) function
+// Guard Mutex to guarantee atomicity of W32Debug(string) function
 var mu sync.Mutex
 
-// W32Debug Helper method to output colored logs in Windows terminals
+// Helper method to output colored logs in Windows terminals
 func W32Debug(msg string) {
 	mu.Lock()
 	defer mu.Unlock()

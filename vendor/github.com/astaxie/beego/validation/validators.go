@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
-	"strings"
 	"time"
 	"unicode/utf8"
 )
@@ -99,7 +98,7 @@ func (r Required) IsSatisfied(obj interface{}) bool {
 	}
 
 	if str, ok := obj.(string); ok {
-		return len(strings.TrimSpace(str)) > 0
+		return len(str) > 0
 	}
 	if _, ok := obj.(bool); ok {
 		return true
@@ -146,7 +145,7 @@ func (r Required) IsSatisfied(obj interface{}) bool {
 
 // DefaultMessage return the default error message
 func (r Required) DefaultMessage() string {
-	return MessageTmpls["Required"]
+	return fmt.Sprint(MessageTmpls["Required"])
 }
 
 // GetKey return the r.Key
@@ -365,7 +364,7 @@ func (a Alpha) IsSatisfied(obj interface{}) bool {
 
 // DefaultMessage return the default Length error message
 func (a Alpha) DefaultMessage() string {
-	return MessageTmpls["Alpha"]
+	return fmt.Sprint(MessageTmpls["Alpha"])
 }
 
 // GetKey return the m.Key
@@ -398,7 +397,7 @@ func (n Numeric) IsSatisfied(obj interface{}) bool {
 
 // DefaultMessage return the default Length error message
 func (n Numeric) DefaultMessage() string {
-	return MessageTmpls["Numeric"]
+	return fmt.Sprint(MessageTmpls["Numeric"])
 }
 
 // GetKey return the n.Key
@@ -431,7 +430,7 @@ func (a AlphaNumeric) IsSatisfied(obj interface{}) bool {
 
 // DefaultMessage return the default Length error message
 func (a AlphaNumeric) DefaultMessage() string {
-	return MessageTmpls["AlphaNumeric"]
+	return fmt.Sprint(MessageTmpls["AlphaNumeric"])
 }
 
 // GetKey return the a.Key
@@ -496,7 +495,7 @@ func (n NoMatch) GetLimitValue() interface{} {
 	return n.Regexp.String()
 }
 
-var alphaDashPattern = regexp.MustCompile(`[^\d\w-_]`)
+var alphaDashPattern = regexp.MustCompile("[^\\d\\w-_]")
 
 // AlphaDash check not Alpha
 type AlphaDash struct {
@@ -506,7 +505,7 @@ type AlphaDash struct {
 
 // DefaultMessage return the default AlphaDash error message
 func (a AlphaDash) DefaultMessage() string {
-	return MessageTmpls["AlphaDash"]
+	return fmt.Sprint(MessageTmpls["AlphaDash"])
 }
 
 // GetKey return the n.Key
@@ -519,7 +518,7 @@ func (a AlphaDash) GetLimitValue() interface{} {
 	return nil
 }
 
-var emailPattern = regexp.MustCompile(`^[\w!#$%&'*+/=?^_` + "`" + `{|}~-]+(?:\.[\w!#$%&'*+/=?^_` + "`" + `{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[a-zA-Z0-9](?:[\w-]*[\w])?$`)
+var emailPattern = regexp.MustCompile("[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[a-zA-Z0-9](?:[\\w-]*[\\w])?")
 
 // Email check struct
 type Email struct {
@@ -529,7 +528,7 @@ type Email struct {
 
 // DefaultMessage return the default Email error message
 func (e Email) DefaultMessage() string {
-	return MessageTmpls["Email"]
+	return fmt.Sprint(MessageTmpls["Email"])
 }
 
 // GetKey return the n.Key
@@ -542,7 +541,7 @@ func (e Email) GetLimitValue() interface{} {
 	return nil
 }
 
-var ipPattern = regexp.MustCompile(`^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$`)
+var ipPattern = regexp.MustCompile("^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$")
 
 // IP check struct
 type IP struct {
@@ -552,7 +551,7 @@ type IP struct {
 
 // DefaultMessage return the default IP error message
 func (i IP) DefaultMessage() string {
-	return MessageTmpls["IP"]
+	return fmt.Sprint(MessageTmpls["IP"])
 }
 
 // GetKey return the i.Key
@@ -565,7 +564,7 @@ func (i IP) GetLimitValue() interface{} {
 	return nil
 }
 
-var base64Pattern = regexp.MustCompile(`^(?:[A-Za-z0-99+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$`)
+var base64Pattern = regexp.MustCompile("^(?:[A-Za-z0-99+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")
 
 // Base64 check struct
 type Base64 struct {
@@ -575,7 +574,7 @@ type Base64 struct {
 
 // DefaultMessage return the default Base64 error message
 func (b Base64) DefaultMessage() string {
-	return MessageTmpls["Base64"]
+	return fmt.Sprint(MessageTmpls["Base64"])
 }
 
 // GetKey return the b.Key
@@ -589,7 +588,7 @@ func (b Base64) GetLimitValue() interface{} {
 }
 
 // just for chinese mobile phone number
-var mobilePattern = regexp.MustCompile(`^((\+86)|(86))?(1(([35][0-9])|[8][0-9]|[7][06789]|[4][579]))\d{8}$`)
+var mobilePattern = regexp.MustCompile("^((\\+86)|(86))?(1(([35][0-9])|[8][0-9]|[7][06789]|[4][579]))\\d{8}$")
 
 // Mobile check struct
 type Mobile struct {
@@ -599,7 +598,7 @@ type Mobile struct {
 
 // DefaultMessage return the default Mobile error message
 func (m Mobile) DefaultMessage() string {
-	return MessageTmpls["Mobile"]
+	return fmt.Sprint(MessageTmpls["Mobile"])
 }
 
 // GetKey return the m.Key
@@ -613,7 +612,7 @@ func (m Mobile) GetLimitValue() interface{} {
 }
 
 // just for chinese telephone number
-var telPattern = regexp.MustCompile(`^(0\d{2,3}(\-)?)?\d{7,8}$`)
+var telPattern = regexp.MustCompile("^(0\\d{2,3}(\\-)?)?\\d{7,8}$")
 
 // Tel check telephone struct
 type Tel struct {
@@ -623,7 +622,7 @@ type Tel struct {
 
 // DefaultMessage return the default Tel error message
 func (t Tel) DefaultMessage() string {
-	return MessageTmpls["Tel"]
+	return fmt.Sprint(MessageTmpls["Tel"])
 }
 
 // GetKey return the t.Key
@@ -650,7 +649,7 @@ func (p Phone) IsSatisfied(obj interface{}) bool {
 
 // DefaultMessage return the default Phone error message
 func (p Phone) DefaultMessage() string {
-	return MessageTmpls["Phone"]
+	return fmt.Sprint(MessageTmpls["Phone"])
 }
 
 // GetKey return the p.Key
@@ -664,7 +663,7 @@ func (p Phone) GetLimitValue() interface{} {
 }
 
 // just for chinese zipcode
-var zipCodePattern = regexp.MustCompile(`^[1-9]\d{5}$`)
+var zipCodePattern = regexp.MustCompile("^[1-9]\\d{5}$")
 
 // ZipCode check the zip struct
 type ZipCode struct {
@@ -674,7 +673,7 @@ type ZipCode struct {
 
 // DefaultMessage return the default Zip error message
 func (z ZipCode) DefaultMessage() string {
-	return MessageTmpls["ZipCode"]
+	return fmt.Sprint(MessageTmpls["ZipCode"])
 }
 
 // GetKey return the z.Key

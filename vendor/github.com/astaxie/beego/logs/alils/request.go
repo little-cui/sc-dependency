@@ -33,12 +33,12 @@ func request(project *LogProject, method, uri string, headers map[string]string,
 	}
 
 	// Calc Authorization
-	// Authorization = "SLS <AccessKeyID>:<Signature>"
+	// Authorization = "SLS <AccessKeyId>:<Signature>"
 	digest, err := signature(project, method, uri, headers)
 	if err != nil {
 		return
 	}
-	auth := fmt.Sprintf("SLS %v:%v", project.AccessKeyID, digest)
+	auth := fmt.Sprintf("SLS %v:%v", project.AccessKeyId, digest)
 	headers["Authorization"] = auth
 
 	// Initialize http request

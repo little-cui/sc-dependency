@@ -60,8 +60,6 @@ var (
 		"sqlite3":  DRSqlite,
 		"tidb":     DRTiDB,
 		"oracle":   DROracle,
-		"oci8":     DROracle, // github.com/mattn/go-oci8
-		"ora":      DROracle, //https://github.com/rana/ora
 	}
 	dbBasers = map[DriverType]dbBaser{
 		DRMySQL:    newdbBaseMysql(),
@@ -188,7 +186,7 @@ func addAliasWthDB(aliasName, driverName string, db *sql.DB) (*alias, error) {
 		return nil, fmt.Errorf("register db Ping `%s`, %s", aliasName, err.Error())
 	}
 
-	if !dataBaseCache.add(aliasName, al) {
+	if dataBaseCache.add(aliasName, al) == false {
 		return nil, fmt.Errorf("DataBase alias name `%s` already registered, cannot reuse", aliasName)
 	}
 
@@ -246,11 +244,11 @@ end:
 
 // RegisterDriver Register a database driver use specify driver name, this can be definition the driver is which database type.
 func RegisterDriver(driverName string, typ DriverType) error {
-	if t, ok := drivers[driverName]; !ok {
+	if t, ok := drivers[driverName]; ok == false {
 		drivers[driverName] = typ
 	} else {
 		if t != typ {
-			return fmt.Errorf("driverName `%s` db driver already registered and is other type", driverName)
+			return fmt.Errorf("driverName `%s` db driver already registered and is other type\n", driverName)
 		}
 	}
 	return nil
@@ -261,7 +259,7 @@ func SetDataBaseTZ(aliasName string, tz *time.Location) error {
 	if al, ok := dataBaseCache.get(aliasName); ok {
 		al.TZ = tz
 	} else {
-		return fmt.Errorf("DataBase alias name `%s` not registered", aliasName)
+		return fmt.Errorf("DataBase alias name `%s` not registered\n", aliasName)
 	}
 	return nil
 }
@@ -296,5 +294,5 @@ func GetDB(aliasNames ...string) (*sql.DB, error) {
 	if ok {
 		return al.DB, nil
 	}
-	return nil, fmt.Errorf("DataBase of alias name `%s` not found", name)
+	return nil, fmt.Errorf("DataBase of alias name `%s` not found\n", name)
 }

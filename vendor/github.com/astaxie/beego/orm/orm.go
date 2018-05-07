@@ -107,7 +107,7 @@ func (o *orm) getMiInd(md interface{}, needPtr bool) (mi *modelInfo, ind reflect
 	if mi, ok := modelCache.getByFullName(name); ok {
 		return mi, ind
 	}
-	panic(fmt.Errorf("<Ormer> table: `%s` not found, make sure it was registered with `RegisterModel()`", name))
+	panic(fmt.Errorf("<Ormer> table: `%s` not found, maybe not RegisterModel", name))
 }
 
 // get field info from model info by given field name
@@ -122,13 +122,21 @@ func (o *orm) getFieldInfo(mi *modelInfo, name string) *fieldInfo {
 // read data to model
 func (o *orm) Read(md interface{}, cols ...string) error {
 	mi, ind := o.getMiInd(md, true)
-	return o.alias.DbBaser.Read(o.db, mi, ind, o.alias.TZ, cols, false)
+	err := o.alias.DbBaser.Read(o.db, mi, ind, o.alias.TZ, cols, false)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // read data to model, like Read(), but use "SELECT FOR UPDATE" form
 func (o *orm) ReadForUpdate(md interface{}, cols ...string) error {
 	mi, ind := o.getMiInd(md, true)
-	return o.alias.DbBaser.Read(o.db, mi, ind, o.alias.TZ, cols, true)
+	err := o.alias.DbBaser.Read(o.db, mi, ind, o.alias.TZ, cols, true)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Try to read a row from the database, or insert one if it doesn't exist
@@ -230,11 +238,15 @@ func (o *orm) InsertOrUpdate(md interface{}, colConflitAndArgs ...string) (int64
 // cols set the columns those want to update.
 func (o *orm) Update(md interface{}, cols ...string) (int64, error) {
 	mi, ind := o.getMiInd(md, true)
-	return o.alias.DbBaser.Update(o.db, mi, ind, o.alias.TZ, cols)
+	num, err := o.alias.DbBaser.Update(o.db, mi, ind, o.alias.TZ, cols)
+	if err != nil {
+		return num, err
+	}
+	return num, nil
 }
 
 // delete model in database
-// cols shows the delete conditions values read from. default is pk
+// cols shows the delete conditions values read from. deafult is pk
 func (o *orm) Delete(md interface{}, cols ...string) (int64, error) {
 	mi, ind := o.getMiInd(md, true)
 	num, err := o.alias.DbBaser.Delete(o.db, mi, ind, o.alias.TZ, cols)
@@ -349,7 +361,7 @@ func (o *orm) queryRelated(md interface{}, name string) (*modelInfo, *fieldInfo,
 	fi := o.getFieldInfo(mi, name)
 
 	_, _, exist := getExistPk(mi, ind)
-	if !exist {
+	if exist == false {
 		panic(ErrMissPK)
 	}
 
@@ -420,7 +432,7 @@ func (o *orm) getRelQs(md interface{}, mi *modelInfo, fi *fieldInfo) *querySet {
 // table name can be string or struct.
 // e.g. QueryTable("user"), QueryTable(&user{}) or QueryTable((*User)(nil)),
 func (o *orm) QueryTable(ptrStructOrTableName interface{}) (qs QuerySeter) {
-	var name string
+	name := ""
 	if table, ok := ptrStructOrTableName.(string); ok {
 		name = snakeString(table)
 		if mi, ok := modelCache.get(name); ok {
@@ -477,7 +489,7 @@ func (o *orm) Begin() error {
 
 // commit transaction
 func (o *orm) Commit() error {
-	if !o.isTx {
+	if o.isTx == false {
 		return ErrTxDone
 	}
 	err := o.db.(txEnder).Commit()
@@ -492,7 +504,7 @@ func (o *orm) Commit() error {
 
 // rollback transaction
 func (o *orm) Rollback() error {
-	if !o.isTx {
+	if o.isTx == false {
 		return ErrTxDone
 	}
 	err := o.db.(txEnder).Rollback()
