@@ -289,3 +289,12 @@ import:
 - package: github.com/natefinch/lumberjack
   version: a96e63847dc3c67d17befa69c303767e2f84e54f
   repo: https://github.com/natefinch/lumberjack
+- package: github.com/cheggaaa/pb
+  version: v1.0.25
+  repo: https://github.com/cheggaaa/pb
+- package: golang.org/x/sys
+  version: 378d26f46672a356c46195c28f61bdb4c0a781dd
+  repo: https://github.com/golang/sys
+  subpackages:
+  - unix
+  - windows
