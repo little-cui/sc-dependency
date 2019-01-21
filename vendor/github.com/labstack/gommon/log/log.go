@@ -8,9 +8,10 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"strconv"
 	"sync"
 	"time"
+
+	"strconv"
 
 	"github.com/mattn/go-isatty"
 	"github.com/valyala/fasttemplate"
@@ -41,8 +42,6 @@ const (
 	WARN
 	ERROR
 	OFF
-	panicLevel
-	fatalLevel
 )
 
 var (
@@ -75,9 +74,6 @@ func (l *Logger) initLevels() {
 		l.color.Green("INFO"),
 		l.color.Yellow("WARN"),
 		l.color.Red("ERROR"),
-		"",
-		l.color.Yellow("PANIC", color.U),
-		l.color.Red("FATAL", color.U),
 	}
 }
 
@@ -192,32 +188,32 @@ func (l *Logger) Errorj(j JSON) {
 }
 
 func (l *Logger) Fatal(i ...interface{}) {
-	l.log(fatalLevel, "", i...)
+	l.Print(i...)
 	os.Exit(1)
 }
 
 func (l *Logger) Fatalf(format string, args ...interface{}) {
-	l.log(fatalLevel, format, args...)
+	l.Printf(format, args...)
 	os.Exit(1)
 }
 
 func (l *Logger) Fatalj(j JSON) {
-	l.log(fatalLevel, "json", j)
+	l.Printj(j)
 	os.Exit(1)
 }
 
 func (l *Logger) Panic(i ...interface{}) {
-	l.log(panicLevel, "", i...)
+	l.Print(i...)
 	panic(fmt.Sprint(i...))
 }
 
 func (l *Logger) Panicf(format string, args ...interface{}) {
-	l.log(panicLevel, format, args...)
+	l.Printf(format, args...)
 	panic(fmt.Sprintf(format, args))
 }
 
 func (l *Logger) Panicj(j JSON) {
-	l.log(panicLevel, "json", j)
+	l.Printj(j)
 	panic(j)
 }
 
@@ -347,7 +343,7 @@ func (l *Logger) log(v Lvl, format string, args ...interface{}) {
 	buf := l.bufferPool.Get().(*bytes.Buffer)
 	buf.Reset()
 	defer l.bufferPool.Put(buf)
-	_, file, line, _ := runtime.Caller(2)
+	_, file, line, _ := runtime.Caller(3)
 
 	if v >= l.level || v == 0 {
 		message := ""
